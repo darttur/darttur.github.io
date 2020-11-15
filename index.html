@@ -40,7 +40,8 @@
             
             const HEIGHT=window.innerHeight
             const WIDTH=window.innerWidth
-            const g=0.001
+            
+            var g=0.001
             
             
 		    var scene = new THREE.Scene();
@@ -54,9 +55,19 @@
             
             
             
+            var setting={
+                G:0.001,
+                light_general:"#303030",
+                general_light:new THREE.AmbientLight(0x303030),
+                ok: function(){
+                    g=this.G
+                    this.general_light.color=new THREE.Color(this.light_general); // soft white light
+                }
+            }
+            
+            scene.add( setting.general_light );
             //setting light
-            const general_light = new THREE.AmbientLight( 0x303030 ); // soft white light
-            scene.add( general_light );
+            
 
             var material =new THREE.MeshPhongMaterial({shininess:10, color: 0xffffff})
             
@@ -133,6 +144,13 @@
                     }
                 }
             }
+            
+            var settings=gui.addFolder('Settings')
+            settings.addColor(setting, 'light_general')
+            settings.add(setting, 'G')
+            settings.add(setting, 'ok')
+            
+            
             
             var conv=gui.addFolder("Convert")
             
@@ -235,6 +253,7 @@
             //main loop
             function render() {
 	            requestAnimationFrame(render);
+                
                 for(i=0; i<objs.length; i++){
                     for(j=0; j<objs.length; j++){
                         if(i!=j){
