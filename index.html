@@ -282,13 +282,13 @@
                         objs[i].coord[dim]=objs[i].coord[dim]+(objs[i].velocity[dim]+objs[i].velocity_[dim])/2
                     }
                 }
-                
+                }
                 for(i=0; i<objs.length; i++){
                     objs[i].obj.position.x=objs[i].coord[0]
                     objs[i].obj.position.y=objs[i].coord[1]
                     objs[i].obj.position.z=objs[i].coord[2]
                 }
-                }
+                
                 confirm(objs)
                 
 	           renderer.render(scene, camera);
