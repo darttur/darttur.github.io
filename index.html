@@ -133,13 +133,14 @@
                 }
                 generatePlanet(){
                     var geometry = new THREE.SphereGeometry( this.params[1], 32, 32 );
-                    this.obj = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({shininess:20, color: 0xffffff})); 
+                    this.obj = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({shininess:1200, color: new THREE.Color(this.params[2])})); 
                     scene.add( this.obj ); 
                 }
                 generateStar(){
                     var geometry = new THREE.SphereGeometry( this.params[1], 32, 32 );
-                    this.obj = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({color: 0xfff000, emissive:0xffffff, emissiveIntensity: 10000})); 
-                    this.point_light = new THREE.PointLight( 0xffffff, 1, 1050 );
+                    this.obj = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({color: new THREE.Color(this.params[2]), emissive:new THREE.Color(this.params[2])})); 
+                    this.point_light = new THREE.PointLight( new THREE.Color(this.params[2]), 1, 1050 );
+                    console.log(new THREE.Color(this.params[2]))
                     this.point_light.position.set(this.coord[0], this.coord[1], this.coord[2]);
                     
                     scene.add(this.point_light)
@@ -179,9 +180,9 @@
                         objs.push(new Objects(
                         [parseFloat(chars[0]), parseFloat(chars[1]), parseFloat(chars[2])],
                         [parseFloat(chars[3]), parseFloat(chars[4]), parseFloat(chars[5])],
-                        [parseFloat(chars[6]), parseFloat(chars[7])],
-                        chars[8],
-                        chars[9]
+                        [parseFloat(chars[6]), parseFloat(chars[7]),  parseFloat(chars[9])],
+                        chars[9],
+                        chars[10]
                         ))
                     }
                 },
@@ -190,7 +191,7 @@
                     for(i=0;i<objs.length; i++){
                         this.str+=objs[i].coord[0]+";"+objs[i].coord[1]+";"+objs[i].coord[2]+";"+
                             objs[i].velocity[0]+";"+objs[i].velocity[1]+";"+objs[i].velocity[2]+";"+
-                            objs[i].params[0]+";"+objs[i].params[1]+";"+objs[i].name+";"+objs[i].objType+"---"
+                            objs[i].params[0]+";"+objs[i].params[1]+";"+objs[i].params[2]+";"+objs[i].name+";"+objs[i].objType+"---"
                     }
                 }
             }
@@ -203,6 +204,7 @@
             infoToAdd ={
                 name: "planet X",
                 objtype: "planet",
+                colort: "#303030",
                 mass: 100,
                 radius: 10,
                 x: 0,
@@ -215,6 +217,7 @@
             }
             adding.add(infoToAdd, 'name').name("Name")
             adding.add(infoToAdd, 'objtype', ['planet', 'star']).name("Type")
+            adding.addColor(infoToAdd, 'colort').name("Color")
             adding.add(infoToAdd, 'mass').name("Mass")
             adding.add(infoToAdd, 'radius').name("Radius")
             adding.add(infoToAdd, 'x').name("X")
@@ -227,7 +230,7 @@
             
             adding.add([addObject], 0).name("add")
             function addObject(){
-                objs.push(new Objects([infoToAdd.x, infoToAdd.y, infoToAdd.z], [infoToAdd.velx, infoToAdd.vely, infoToAdd.velz], [infoToAdd.mass, infoToAdd.radius], infoToAdd.name, infoToAdd.objtype))
+                objs.push(new Objects([infoToAdd.x, infoToAdd.y, infoToAdd.z], [infoToAdd.velx, infoToAdd.vely, infoToAdd.velz], [infoToAdd.mass, infoToAdd.radius, infoToAdd.colort], infoToAdd.name, infoToAdd.objtype))
                 
             }
             
@@ -259,9 +262,11 @@
 
             
             //main loop
+            additional_fl=true
             function render() {
 	            requestAnimationFrame(render);
-                if(setting.start){
+                if(setting.start || additional_fl){
+                    additional_fl=false
                 for(i=0; i<objs.length; i++){
                     for(j=0; j<objs.length; j++){
                         if(i!=j){
@@ -288,7 +293,6 @@
                     objs[i].obj.position.y=objs[i].coord[1]
                     objs[i].obj.position.z=objs[i].coord[2]
                 }
-                
                 confirm(objs)
                 
 	           renderer.render(scene, camera);
