@@ -53,21 +53,6 @@
             var camera = new THREE.PerspectiveCamera(100, WIDTH / HEIGHT, 0.1, 100000);
             camera.position.z = 200;
             
-            
-            
-            var setting={
-                G:0.001,
-                light_general:"#303030",
-                general_light:new THREE.AmbientLight(0x303030),
-                ok: function(){
-                    g=this.G
-                    this.general_light.color=new THREE.Color(this.light_general); // soft white light
-                }
-            }
-            
-            scene.add( setting.general_light );
-            //setting light
-            
 
             var material =new THREE.MeshPhongMaterial({shininess:10, color: 0xffffff})
             
@@ -75,6 +60,29 @@
             var gui = new dat.gui.GUI();
             gui.domElement.id = 'gui';
             
+            
+            var start_button;
+            
+            var setting={
+                start:false,
+                G:0.001,
+                light_general:"#303030",
+                general_light:new THREE.AmbientLight(0x303030),
+                ok: function(){
+                    g=this.G
+                    this.general_light.color=new THREE.Color(this.light_general); // soft white light
+                },
+                starter:function(){
+                    if(this.start){
+                        start_button.name("Start")
+                    }else{
+                        start_button.name("Stop")
+                    }
+                    this.start=!this.start
+                }
+            }
+            start_button=gui.add(setting, 'starter').name("Start")
+            scene.add( setting.general_light );
             
             
             class Objects{
@@ -253,7 +261,7 @@
             //main loop
             function render() {
 	            requestAnimationFrame(render);
-                
+                if(setting.start){
                 for(i=0; i<objs.length; i++){
                     for(j=0; j<objs.length; j++){
                         if(i!=j){
@@ -281,7 +289,7 @@
                     objs[i].obj.position.z=objs[i].coord[2]
                 }
                 confirm(objs)
-                
+                }
 	           renderer.render(scene, camera);
             }
             render()
