@@ -60,14 +60,21 @@
             var gui = new dat.gui.GUI();
             gui.domElement.id = 'gui';
             
+            var objs=[]/*new Objects([0,0,0], [0,0,0], [100000, 30], "1", "star"),
+                 new Objects([100,0,0], [0,1,0], [100, 7], "2", "planet"),
+                 new Objects([-100,0,0], [0,0.65,0.4], [100, 10], "3", "planet")]
+            */
+            
+            //0;0;0;0;0;0;100000;30;#ffffff;Star;star---0;100;0;1;0;0;100;10;#418c00;Planet;planet---
+            var objs_copy=[]
             
             var start_button;
             
             var setting={
                 start:false,
                 G:0.001,
-                light_general:"#303030",
-                general_light:new THREE.AmbientLight(0x303030),
+                light_general:"#418c00",
+                general_light:new THREE.AmbientLight(0x418c00),
                 ok: function(){
                     g=this.G
                     this.general_light.color=new THREE.Color(this.light_general); // soft white light
@@ -79,10 +86,16 @@
                         start_button.name("Stop")
                     }
                     this.start=!this.start
+                },
+                reloader:function(){
+                    objs=objs_copy
                 }
             }
+            
             start_button=gui.add(setting, 'starter').name("Start")
-            scene.add( setting.general_light );
+            //gui.add(setting, 'reloader').name("Reload")
+            
+            scene.add(setting.general_light);
             
             
             class Objects{
@@ -139,9 +152,10 @@
                 generateStar(){
                     var geometry = new THREE.SphereGeometry( this.params[1], 32, 32 );
                     this.obj = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({color: new THREE.Color(this.params[2]), emissive:new THREE.Color(this.params[2])})); 
-                    this.point_light = new THREE.PointLight( new THREE.Color(this.params[2]), 1, 1050 );
-                    console.log(new THREE.Color(this.params[2]))
+                    this.point_light = new THREE.PointLight( new THREE.Color(this.params[2]), 1.4, 10050 );
                     this.point_light.position.set(this.coord[0], this.coord[1], this.coord[2]);
+                    const pointLightHelper = new THREE.PointLightHelper( this.point_light, this.params[1]-2 );
+                    scene.add( pointLightHelper );
                     
                     scene.add(this.point_light)
                     scene.add(this.obj);   
@@ -165,11 +179,6 @@
             
             var adding=gui.addFolder("Add")
             
-            var objs=[]/*new Objects([0,0,0], [0,0,0], [100000, 30], "1", "star"),
-                 new Objects([100,0,0], [0,1,0], [100, 7], "2", "planet"),
-                 new Objects([-100,0,0], [0,0.65,0.4], [100, 10], "3", "planet")]
-            */
-            
             convInfo={
                 str:"",
                 f:function(){
@@ -180,10 +189,11 @@
                         objs.push(new Objects(
                         [parseFloat(chars[0]), parseFloat(chars[1]), parseFloat(chars[2])],
                         [parseFloat(chars[3]), parseFloat(chars[4]), parseFloat(chars[5])],
-                        [parseFloat(chars[6]), parseFloat(chars[7]),  parseFloat(chars[9])],
+                        [parseFloat(chars[6]), parseFloat(chars[7]),  chars[8]],
                         chars[9],
                         chars[10]
                         ))
+                        console.log(chars[10])
                     }
                 },
                 p:function(){
@@ -267,6 +277,7 @@
 	            requestAnimationFrame(render);
                 if(setting.start || additional_fl){
                     additional_fl=false
+                    objs_copy=objs
                 for(i=0; i<objs.length; i++){
                     for(j=0; j<objs.length; j++){
                         if(i!=j){
