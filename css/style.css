@@ -11,7 +11,7 @@ body {
 }
 
 body::-webkit-scrollbar-track {
-    background-color: orange;
+    background-color: black;
 }
 
 body::-webkit-scrollbar {
@@ -21,8 +21,8 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-thumb {
-    background-color: rgba(87, 86, 86, 0.24);
-    background-image: -webkit-linear-gradient(90deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent)
+    background-color: orange;
+    background-image: -webkit-linear-gradient(90deg, orange 25%, transparent 25%, transparent 50%, orange 50%, orange 75%, transparent 75%, transparent)
 }
 
 .content {
