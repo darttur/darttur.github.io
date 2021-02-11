@@ -25,6 +25,7 @@ body::-webkit-scrollbar-thumb {
     background-image: -webkit-linear-gradient(90deg, orange 25%, transparent 25%, transparent 50%, orange 50%, orange 75%, transparent 75%, transparent)
 }
 
+
 .content {
     position: absolute;
     width: 70%;
